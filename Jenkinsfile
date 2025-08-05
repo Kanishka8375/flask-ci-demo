@@ -2,27 +2,14 @@ pipeline {
     agent any
 
     stages {
-        stage('Create Virtual Environment') {
+        stage('Setup and Run') {
             steps {
-                bat 'python -m venv venv'
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                bat '.\\venv\\Scripts\\pip install -r requirements.txt'
-            }
-        }
-
-        stage('Run Unit Tests') {
-            steps {
-                bat '.\\venv\\Scripts\\python -m unittest discover tests'
-            }
-        }
-
-        stage('Run Flask App') {
-            steps {
-                bat '.\\venv\\Scripts\\python app.py'
+                bat '''
+                    python -m venv venv
+                    venv\\Scripts\\pip install -r requirements.txt
+                    venv\\Scripts\\python -m unittest discover tests
+                    venv\\Scripts\\python app.py
+                '''
             }
         }
     }
