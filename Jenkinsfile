@@ -1,23 +1,33 @@
 pipeline {
     agent any
 
+    environment {
+        PYTHON = 'C:\\Python311\\python.exe' // replace with actual path if different
+        PIP = 'C:\\Python311\\Scripts\\pip.exe'
+    }
+
     stages {
-        stage('Install dependencies') {
+        stage('Create Virtual Environment') {
             steps {
-                bat 'python -m venv venv'
-                bat '.\\venv\\Scripts\\pip install -r requirements.txt'
+                bat "${PYTHON} -m venv venv"
             }
         }
 
-        stage('Run unit tests') {
+        stage('Install Dependencies') {
             steps {
-                bat '.\\venv\\Scripts\\python -m unittest discover tests'
+                bat ".\\venv\\Scripts\\pip install -r requirements.txt"
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                bat ".\\venv\\Scripts\\python -m unittest discover tests"
             }
         }
 
         stage('Run Flask App') {
             steps {
-                bat '.\\venv\\Scripts\\python app.py'
+                bat ".\\venv\\Scripts\\python app.py"
             }
         }
     }
