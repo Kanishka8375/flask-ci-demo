@@ -2,28 +2,22 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone') {
+        stage('Install dependencies') {
             steps {
-                git 'https://github.com/Kanishka8375/flask-ci-demo.git'
+                bat 'python -m venv venv'
+                bat '.\\venv\\Scripts\\pip install -r requirements.txt'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Run unit tests') {
             steps {
-                sh 'python3 -m venv venv'
-                sh './venv/bin/pip install -r requirements.txt'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh './venv/bin/python -m unittest discover tests'
+                bat '.\\venv\\Scripts\\python -m unittest discover tests'
             }
         }
 
         stage('Run Flask App') {
             steps {
-                sh './venv/bin/python app.py'
+                bat '.\\venv\\Scripts\\python app.py'
             }
         }
     }
